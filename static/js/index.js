@@ -94,7 +94,7 @@ function inputFilter(name, region, selectRegion, text) {
 function updateCountries(value, region, countriesContainer, allCountries) {
 
   let lowerCaseText = ""
-  if (value != "") {
+  if (value !== "") {
     lowerCaseText = value.toLowerCase()
   } else {
     lowerCaseText = value
@@ -114,7 +114,6 @@ function deleteAllChildNode(parent) {
   parent.querySelectorAll('*').forEach(n => n.remove());
 }
 
-
 async function main() {
   const allCountries = await fetchCountries(URL)
 
@@ -124,20 +123,17 @@ async function main() {
     updateCountries(value, selectStore.getState(), countriesContainer, allCountries)
   })
 
-  function handleInput(e) {
-    inputStore.set(e.target.value)
-  }
-  countryInput.addEventListener('input', handleInput)
-
+  countryInput.addEventListener('input', function () {
+    inputStore.set(this.value)
+  })
 
   selectStore.subscribe(value => {
     updateCountries(inputStore.getState(), value, countriesContainer, allCountries)
   })
 
-  function handleSelect(e) {
-    selectStore.set(e.target.value)
-  }
-  regionSelect.addEventListener('input', handleSelect)
+  regionSelect.addEventListener('input', function () {
+    selectStore.set(this.value)
+  })
 
 }
 
