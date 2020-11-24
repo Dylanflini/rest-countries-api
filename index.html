@@ -1,0 +1,51 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/css/layout.css">
+  <link rel="stylesheet" href="/static/css/index.css">
+  <title>Countries API</title>
+</head>
+
+<body>
+  <nav class="nav">
+    <ul class="nav__items-container">
+      <li class="nav__title">
+        Where in the world?
+      </li>
+      <li class="nav__dark-mode">
+        dark mode
+      </li>
+    </ul>
+  </nav>
+
+  <main class="main">
+
+    <form id="country-form" class="form">
+      <label class="form__input-label" for="country-input">
+        <img src="static/icons/loupe.svg" class="form__image">
+        <input class="form__input" placeholder="Search for a country" id="country-input" name="country-input">
+      </label>
+
+      <label class="form__select-label" for="filter">
+        <select class="form__select" name="filter" id="filter">
+          <option value="Filter by Region">Filter by Region</option>
+          <option value="Africa">Africa</option>
+          <option value="Americas">America</option>
+          <option value="Asia">Asia</option>
+          <option value="Europe">Europe</option>
+          <option value="Oceania">Oceania</option>
+        </select>
+      </label>
+    </form>
+
+    <div class="countries" id="country-container">
+    </div>
+
+  </main>
+  <script src="/static/js/store.js"></script>
+  <script src="/static/js/index.js"></script>
+</body>
+
+</html>
