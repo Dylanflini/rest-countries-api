@@ -4,7 +4,7 @@
   "description": "![Design preview for the REST Countries API with color theme switcher coding challenge](./design/desktop-preview.jpg)",
   "main": "index.js",
   "scripts": {
-    "build": "esbuild ./static/js/index.js --bundle --minify --sourcemap --target=chrome58,firefox57,safari11,edge16 --outfile=out.js",
+    "build": "node create-bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
