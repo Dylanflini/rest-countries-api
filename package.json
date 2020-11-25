@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "node create-bundle.js",
+    "build-css": "node create-css-bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,5 +21,8 @@
   "homepage": "https://github.com/Dylanflini/rest-countries-api#readme",
   "dependencies": {
     "esbuild": "^0.8.14"
+  },
+  "devDependencies": {
+    "chokidar": "^3.4.3"
   }
 }

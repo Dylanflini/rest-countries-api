@@ -1,7 +1,7 @@
 // https://restcountries.eu/rest/v2/name/Estonia
 
 import { store } from './store.js'
-import './lazysizes.js'
+
 
 async function fetchCountries ( URL ) {
   const response = await fetch( URL )
@@ -10,13 +10,13 @@ async function fetchCountries ( URL ) {
 
 
 function createCountry ( name, src, population, region, capital ) {
+
+  const countryDescriptionEntries = [ 'Population: ', 'Region: ', 'Capital: ' ]
+
   const container = document.createElement( 'div' )
   container.classList.add( 'country' )
 
-  // 2<img data-src="image-gato2.jpg" loading="lazy" alt=".." class="lazyload"/>
-
   const img = document.createElement( 'img' )
-  // img.src = src;
   img.setAttribute( 'data-src', src )
   img.setAttribute( 'loading', 'lazy' )
   img.alt = name;
@@ -30,7 +30,7 @@ function createCountry ( name, src, population, region, capital ) {
   container.appendChild( img )
   container.appendChild( title )
 
-  const description = createCountryDescription( [ 'Population: ', 'Region: ', 'Capital: ' ], [ population, region, capital ] )
+  const description = createCountryDescription( countryDescriptionEntries, [ population, region, capital ], countryDescriptionEntries[ 1 ] )
 
   container.appendChild( description )
 
@@ -38,7 +38,7 @@ function createCountry ( name, src, population, region, capital ) {
 }
 
 
-function createCountryDescription ( names, texts ) {
+function createCountryDescription ( names, texts, region ) {
 
   const descriptionContainer = document.createElement( 'div' )
   descriptionContainer.classList.add( 'country__description' )
@@ -56,6 +56,10 @@ function createCountryDescription ( names, texts ) {
     text2.textContent = texts[ index ]
     text2.classList.add( 'country__text' )
 
+    if ( name === region ) {
+      text2.classList.add( 'region' )
+    }
+
     container.appendChild( text1 )
     container.appendChild( text2 )
 
@@ -71,65 +75,68 @@ function createCountryDescription ( names, texts ) {
 }
 
 
-function inputFilter ( name, region, selectRegion, text, defaultRegion ) {
+function firstRenderCountries ( countriesContainer, allCountries ) {
 
-  if ( selectRegion === defaultRegion ) {
-    return name.toLowerCase().includes( text )
-  } else {
-    return name.toLowerCase().includes( text ) && selectRegion === region
-  }
-
-}
-
-
-function updateCountries ( value, region, countriesContainer, allCountries, defaultRegion ) {
-
-  let lowerCaseText = ""
-  if ( value !== "" ) {
-    lowerCaseText = value.toLowerCase()
-  } else {
-    lowerCaseText = value
-  }
-
-  deleteAllChildNode( countriesContainer )
-
-  const countryFound = allCountries.filter( element => inputFilter( element.name, element.region, region, lowerCaseText, defaultRegion ) )
-
-  countryFound.forEach( country => {
+  allCountries.forEach( country => {
     countriesContainer.appendChild( createCountry( country.name, country.flag, country.population, country.region, country.capital ) )
   } )
+
+  const y = Array.from( countriesContainer.getElementsByClassName( 'country' ) )
+
+  y.forEach( ( element ) => element.classList.add( 'country--display' ) )
+
 }
 
 
-function deleteAllChildNode ( parent ) {
-  parent.querySelectorAll( '*' ).forEach( n => n.remove() );
+function inputFilter ( currentInput, currentRegion, countryName, countryRegion, defaultRegion ) {
+
+  if ( currentRegion === defaultRegion ) {
+    return countryName.toLowerCase().includes( currentInput )
+  } else {
+    return countryName.toLowerCase().includes( currentInput.toLowerCase() ) && countryRegion === currentRegion
+  }
+
+}
+
+
+function updateCountries ( currentName, currentRegion, container, defaultRegion ) {
+
+  const countryDisplay = 'country--display'
+
+  const countriesContainer = Array.from( container.getElementsByClassName( 'country' ) )
+
+  countriesContainer.forEach( element => {
+
+    inputFilter(
+      currentName,
+      currentRegion,
+      element.querySelector( 'h2.country__title' ).textContent,
+      element.querySelector( 'span.country__text.region' ).textContent,
+      defaultRegion
+    ) ?
+      element.classList.add( countryDisplay )
+      :
+      element.classList.remove( countryDisplay )
+  }
+
+  )
 }
 
 
 function lazyload () {
-  // if ( 'loading' in HTMLImageElement.prototype ) {
-  //   // Si el navegador soporta lazy-load, tomamos todas las imágenes que tienen la clase
-  //   // `lazyload`, obtenemos el valor de su atributo `data-src` y lo inyectamos en el `src`.
-  //   const images = document.querySelectorAll( "img.lazyload" );
-  //   images.forEach( img => {
-  //     img.src = img.dataset.src;
 
-  //   } );
-
-  // } else {
-  //   // Importamos dinámicamente la libreria `lazysizes`
-  //   let script = document.createElement( "script" );
-  //   script.async = true;
-  //   // script.src = "https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.0/lazysizes.min.js";
-  //   script.src = "/lazysizes.js";
-  //   // 
-  //   document.body.appendChild( script );
-  // }
+  if ( 'loading' in HTMLImageElement.prototype ) {
+    const images = document.querySelectorAll( "img.lazyload" );
+    images.forEach( img => {
+      img.src = img.dataset.src;
+    } );
+  } else {
+    import( './lazysizes.js' )
+  }
 
 }
 
 async function main () {
-
 
   const URL = "https://restcountries.eu/rest/v2/all",
     DEFAULT_SELECT = 'Filter by Region'
@@ -139,30 +146,25 @@ async function main () {
 
   const countriesContainer = document.querySelector( '#country-container' )
   const countryInput = document.querySelector( '#country-input' )
-
-
   const regionSelect = document.querySelector( '#filter' )
-
   const countryForm = document.querySelector( '#country-form' )
-  countryForm.addEventListener( 'submit', e => { e.preventDefault() } )
 
+  countryForm.addEventListener( 'submit', e => { e.preventDefault() } )
 
   const allCountries = await fetchCountries( URL )
 
-  updateCountries( inputStore.getState(), DEFAULT_SELECT, countriesContainer, allCountries, DEFAULT_SELECT )
+  firstRenderCountries( countriesContainer, allCountries )
 
-  inputStore.subscribe( value => {
-    updateCountries( value, selectStore.getState(), countriesContainer, allCountries, DEFAULT_SELECT )
-    lazyload()
+  inputStore.subscribe( input => {
+    updateCountries( input, selectStore.getState(), countriesContainer, DEFAULT_SELECT )
+  } )
+
+  selectStore.subscribe( select => {
+    updateCountries( inputStore.getState(), select, countriesContainer, DEFAULT_SELECT )
   } )
 
   countryInput.addEventListener( 'input', function () {
     inputStore.set( this.value )
-  } )
-
-  selectStore.subscribe( value => {
-    updateCountries( inputStore.getState(), value, countriesContainer, allCountries, DEFAULT_SELECT )
-    lazyload()
   } )
 
   regionSelect.addEventListener( 'input', function () {

@@ -126,6 +126,11 @@ option{
   max-width: 250px;
   border-radius: 4px;
   box-shadow: 1px 1px 4px rgb(185, 185, 185);
+  display: none;
+}
+
+.country--display{
+  display: block;
 }
 
 .country__image {
