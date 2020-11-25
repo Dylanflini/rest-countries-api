@@ -1,4 +1,4 @@
-function store(initialState) {
+export function store(initialState) {
   let state = initialState;
   let subscriber = () => { };
 

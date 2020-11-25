@@ -1,0 +1,24 @@
+{
+  "name": "rest-countries-api",
+  "version": "1.0.0",
+  "description": "![Design preview for the REST Countries API with color theme switcher coding challenge](./design/desktop-preview.jpg)",
+  "main": "index.js",
+  "scripts": {
+    "build": "esbuild ./static/js/index.js --bundle --minify --sourcemap --target=chrome58,firefox57,safari11,edge16 --outfile=out.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dylanflini/rest-countries-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dylanflini/rest-countries-api/issues"
+  },
+  "homepage": "https://github.com/Dylanflini/rest-countries-api#readme",
+  "dependencies": {
+    "esbuild": "^0.8.14"
+  }
+}
