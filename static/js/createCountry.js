@@ -1,38 +1,46 @@
+import { formatPopulation } from './formatUtils'
+
 function createCountryDescription ( names, texts, region ) {
 
-  const descriptionContainer = document.createElement( 'div' )
-  descriptionContainer.classList.add( 'country__description' )
+    const descriptionContainer = document.createElement( 'div' )
+    descriptionContainer.classList.add( 'country__description' )
 
-  const containers = names.map( ( name, index ) => {
+    const containers = names.map( ( name, index ) => {
 
-    const container = document.createElement( 'div' )
-    container.classList.add( 'country__text-container' )
+      const container = document.createElement( 'div' )
+      container.classList.add( 'country__text-container' )
 
-    const text1 = document.createElement( 'span' )
-    text1.textContent = name
-    text1.classList.add( 'country__text--black' )
+      const text1 = document.createElement( 'span' )
+      text1.textContent = name
+      text1.classList.add( 'country__text--black' )
 
-    const text2 = document.createElement( 'span' )
-    text2.textContent = texts[ index ]
-    text2.classList.add( 'country__text' )
+      const text2 = document.createElement( 'span' )
 
-    if ( name === region ) {
-      text2.classList.add( 'region' )
-    }
+      text2.classList.add( 'country__text' )
 
-    container.appendChild( text1 )
-    container.appendChild( text2 )
+      if ( name === region ) {
+        text2.classList.add( 'region' )
+      }
+      if ( name === "Population: " ) {
+        const textFormat = formatPopulation( texts[ index ] )
+        text2.textContent = textFormat
+      } else {
+        text2.textContent = texts[ index ]
+      }
 
-    return container
-  } )
+      container.appendChild( text1 )
+      container.appendChild( text2 )
 
-  containers.forEach( container => {
-    descriptionContainer.appendChild( container )
-  } )
+      return container
+    } )
 
-  return descriptionContainer;
+    containers.forEach( container => {
+      descriptionContainer.appendChild( container )
+    } )
 
-}
+    return descriptionContainer;
+
+  }
 
 export function createCountry ( name, src, population, region, capital ) {
 
