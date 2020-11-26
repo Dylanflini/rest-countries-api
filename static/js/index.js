@@ -56,15 +56,15 @@ async function main () {
 
   offsetStore.subscribe( ( _, prev ) => {
 
-    const found = allCountries.filter( element => inputFilter(
-      inputStore.getState(),
-      selectStore.getState(),
-      element.name,
-      element.region,
-      DEFAULT_SELECT
-    ) )
-
     if ( prev <= allCountries.length ) {
+
+      const found = allCountries.filter( element => inputFilter(
+        inputStore.getState(),
+        selectStore.getState(),
+        element.name,
+        element.region,
+        DEFAULT_SELECT
+      ) )
 
       const noDisplay = allCountries.filter( element => !inputFilter(
         inputStore.getState(),
@@ -83,9 +83,8 @@ async function main () {
 
       render( countriesContainer, found, offsetStore.getState(), fn, noDisplay )
 
+      lazyload()
     }
-
-    lazyload()
 
   } )
 
